@@ -62,24 +62,24 @@ async function setDataLocalStorage() {
     const id = element.id
     dataLocalStorage.setItem(id, JSON.stringify(element))
   });
-
+  renderUser()
 }
-
-// Obtener los datos de usuario limpios y almacenarlos en la variable dataLocalStorage
-setDataLocalStorage();
-
 //Renderizar en HTML
-function renderUser() {
+async function renderUser() {
+  console.log('------------Renderizando-------------')
+
   // Limpiar el contenido actual
   content.innerHTML = '';
 
   // Obtener los usuarios del almacenamiento local y convertirlos a objetos
-  const users = Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
-
+  const users = await Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
+  console.log(users)
   // Ordenar los usuarios de forma ascendente por nombre
   users.sort((a, b) => a.name.localeCompare(b.name));
 
   // Iterar y agregarlos al HTML
+
+
   users.forEach(user => {
     const userElement = document.createElement('div');
     userElement.className = 'profile-card'
@@ -94,8 +94,8 @@ function renderUser() {
           <div class="profile-text">
               <p>Nombre: ${user.name}</p>
               <p>Telefono: ${user.phone}</p>
-              <p>Email: ${user.email}</p>
-              <p>WebSite: ${user.website}</p>
+              <p>Email:<a href="/"> ${user.email}</a></p>
+              <p>WebSite:<a href="/">${user.website}</a></p>
           </div>
       </div>
 
@@ -105,17 +105,11 @@ function renderUser() {
 }
 
 function removeUser(id) {
-  // Eliminar el usuario del almacenamiento local
-  dataLocalStorage.removeItem(id);
-
-  // Volver a renderizar los usuarios en el HTML
-  renderUser();
-}
-
-function removeUser(id) {
   //eliminar el usuario del almacenamiento local
   dataLocalStorage.removeItem(id)
   //volver a renderizar los usuarios en el HTML
   renderUser()
 }
-renderUser()
+
+window.addEventListener('load', setDataLocalStorage)
+//window.addEventListener('load',renderUser)
