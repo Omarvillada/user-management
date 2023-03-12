@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "main": "node src/assets/js/index.js"
+    "main": "node src/assets/js/index.js",
+    "deploy": "gh-pages -d src"
   },
   "keywords": [],
   "author": "Omarvillada",
   "license": "ISC",
   "dependencies": {
+    "fetch": "^1.1.0",
     "node-fetch": "^3.3.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }

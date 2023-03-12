@@ -8,7 +8,7 @@ const REQUEST_HEADERS = {
   'Accept': 'application/json'
 };
 //div donde se renderizan los usuarios
-const content = null || document.querySelector('.content');
+const content = null || document.querySelector('.row');
 // variable para acceder al espacio de almacenamiento local
 const dataLocalStorage = window.localStorage;
 
@@ -41,6 +41,7 @@ async function getCleanUserData() {
     const users = await fetchData(`${API_URL}/users`);
 
     // Devolver los datos de usuario limpios
+    //desestructuración
     return users.map(({ id, name, email, phone, website }) => ({
       id,
       name,
@@ -49,7 +50,6 @@ async function getCleanUserData() {
       website
     }));
   } catch (error) {
-    console.error(error);
     throw new Error('No se pudieron obtener los datos de usuario.');
   }
 }
@@ -69,7 +69,7 @@ async function setDataLocalStorage() {
 setDataLocalStorage();
 
 //Renderizar en HTML
-function rederUser() {
+function renderUser() {
   // Limpiar el contenido actual
   content.innerHTML = '';
 
@@ -79,15 +79,26 @@ function rederUser() {
   // Ordenar los usuarios de forma ascendente por nombre
   users.sort((a, b) => a.name.localeCompare(b.name));
 
-  // Iterar sobre los usuarios en el almacenamiento local y agregarlos al HTML
+  // Iterar y agregarlos al HTML
   users.forEach(user => {
     const userElement = document.createElement('div');
+    userElement.className = 'profile-card'
     userElement.innerHTML = `
-      <p>Nombre</p><p>${user.name}</p>
-      <p>Telefono</p><p>${user.phone}</p>
-      <p>Email</p><p>${user.email}</p>
-      <p>WebSite</p><p>${user.website}</p>
-      <button onclick="removeUser(${user.id})">Eliminar</button>
+      <div class="profile-content">
+          <div class="btn-div">
+              <button class="btn-close" onclick = removeUser(${user.id})><i class="fa-regular fa-circle-xmark iconestudio"></i></button>
+          </div>
+          <div class="profile-image">
+              <img src="./assets/img/usuario.jpg" alt="firts user">
+          </div>
+          <div class="profile-text">
+              <p>Nombre: ${user.name}</p>
+              <p>Telefono: ${user.phone}</p>
+              <p>Email: ${user.email}</p>
+              <p>WebSite: ${user.website}</p>
+          </div>
+      </div>
+
     `;
     content.appendChild(userElement);
   });
@@ -98,13 +109,13 @@ function removeUser(id) {
   dataLocalStorage.removeItem(id);
 
   // Volver a renderizar los usuarios en el HTML
-  rederUser();
+  renderUser();
 }
 
 function removeUser(id) {
   //eliminar el usuario del almacenamiento local
   dataLocalStorage.removeItem(id)
   //volver a renderizar los usuarios en el HTML
-  rederUser()
+  renderUser()
 }
-rederUser()
+renderUser()
