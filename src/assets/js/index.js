@@ -67,24 +67,38 @@ async function setDataLocalStorage() {
 
 // Obtener los datos de usuario limpios y almacenarlos en la variable dataLocalStorage
 setDataLocalStorage();
+
 //Renderizar en HTML
 function rederUser() {
-  //Limpiar el contenido actual
-  content.innerHTML = ''
+  // Limpiar el contenido actual
+  content.innerHTML = '';
 
-  //Obtener los usuarios del almacenamiento local
-  const users = Object.values(dataLocalStorage);
+  // Obtener los usuarios del almacenamiento local y convertirlos a objetos
+  const users = Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
 
-  //Iterar sobre los usuarios en el almacenamiento local y agregarlos al html
-  users.map(userString => {
-    const user = JSON.parse(userString);
+  // Ordenar los usuarios de forma ascendente por nombre
+  users.sort((a, b) => a.name.localeCompare(b.name));
+
+  // Iterar sobre los usuarios en el almacenamiento local y agregarlos al HTML
+  users.forEach(user => {
     const userElement = document.createElement('div');
     userElement.innerHTML = `
-     <p>${user.name}</p>
-     <button onclick="removeUser(${user.id})">Eliminar</button>
-   `;
+      <p>Nombre</p><p>${user.name}</p>
+      <p>Telefono</p><p>${user.phone}</p>
+      <p>Email</p><p>${user.email}</p>
+      <p>WebSite</p><p>${user.website}</p>
+      <button onclick="removeUser(${user.id})">Eliminar</button>
+    `;
     content.appendChild(userElement);
   });
+}
+
+function removeUser(id) {
+  // Eliminar el usuario del almacenamiento local
+  dataLocalStorage.removeItem(id);
+
+  // Volver a renderizar los usuarios en el HTML
+  rederUser();
 }
 
 function removeUser(id) {
@@ -94,17 +108,3 @@ function removeUser(id) {
   rederUser()
 }
 rederUser()
-
-
-/*
-let dataLocal = JSON.parse(dataLocalStorage.getItem('users'))
-dataLocal.map((user) => {
-    const container = document.querySelector('.content')
-    container.innerHTML += `
-        <p>${user.name}</p>
-    `
-})
-*/
-
-
-//console.log(dataLocal)
