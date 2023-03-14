@@ -20,6 +20,7 @@ const dataLocalStorage = window.localStorage;
  */
 async function fetchData(urlAPI) {
   try {
+    console.log('Consumiendo API')
     // Comprobar que la URL es válida
     new URL(urlAPI);
 
@@ -56,12 +57,14 @@ async function getCleanUserData() {
 
 //Funcion para insertar los datos requeridos en LocalStorage
 async function setDataLocalStorage() {
-  let cleanObj = await getCleanUserData();
 
-  cleanObj.forEach(element => {
-    const id = element.id
-    dataLocalStorage.setItem(id, JSON.stringify(element))
-  });
+  if(dataLocalStorage.length === 0){
+    let cleanObj = await getCleanUserData();
+    cleanObj.forEach(element => {
+      const id = element.id
+      dataLocalStorage.setItem(id, JSON.stringify(element))
+    });  
+  }
   renderUser()
 }
 //Renderizar en HTML
@@ -72,9 +75,7 @@ async function renderUser() {
   content.innerHTML = '';
 
   // Obtener los usuarios del almacenamiento local y convertirlos a objetos
-  console.log('Obteniendo datalocalstorage sin parceo',Object.values(dataLocalStorage))
   const users = Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
-  console.log(users)
   // Ordenar los usuarios de forma ascendente por nombre
   /*
   Localcompare tiene en cuenta acentos y caracteres especiales
