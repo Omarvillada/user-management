@@ -72,9 +72,14 @@ async function renderUser() {
   content.innerHTML = '';
 
   // Obtener los usuarios del almacenamiento local y convertirlos a objetos
-  const users = await Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
+  console.log('Obteniendo datalocalstorage sin parceo',Object.values(dataLocalStorage))
+  const users = Object.values(dataLocalStorage).map(userString => JSON.parse(userString));
   console.log(users)
   // Ordenar los usuarios de forma ascendente por nombre
+  /*
+  Localcompare tiene en cuenta acentos y caracteres especiales
+  */
+  //b.name.localeCompare(a.name) -> Descendente
   users.sort((a, b) => a.name.localeCompare(b.name));
 
   // Iterar y agregarlos al HTML
